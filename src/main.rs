@@ -6,7 +6,7 @@ mod raytracer;
 use raytracer::scene::Scene;
 
 fn main() {
-    let scene: Scene = Scene {};
+    let scene: Scene = Scene::new();
     let width = 800;
     let height = 400;
     let buffer = scene.render(width, height);
