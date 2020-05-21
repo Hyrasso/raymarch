@@ -6,7 +6,7 @@ use super::object::Object;
 pub struct Scene {
     background_color: Color<u8>,
     camera: Camera,
-    objects: Vec<Object>,
+    objects: Vec<Box<Object>>,
     epsilon: f64,
 }
 
@@ -28,7 +28,7 @@ impl Scene {
         self.camera = camera;
     }
 
-    pub fn add_object(&mut self, object: Object) {
+    pub fn add_object(&mut self, object: Box<Object>) {
         self.objects.push(object);
     }
 
@@ -65,7 +65,11 @@ impl Scene {
                 let distance = closest.distance(point);
                 if distance < self.epsilon {
                     // println!("Hit");
-                    return Some(Color::debug());
+                    let material = closest.get_material(origin);
+                    // color
+                    // reflection
+                    // lighting
+                    return Some(Color::from(material.color));
                 }
                 if distance > pres_dist {
                     // println!("Going too far away {:?} after {:?} steps", distance, step);

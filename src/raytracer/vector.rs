@@ -1,4 +1,6 @@
 use std::ops::{Add, Mul, Sub, Div};
+use std::convert::From;
+use super::color::Color;
 
 #[derive(Debug,Copy,Clone)]
 pub struct Vector {
@@ -84,6 +86,16 @@ impl Div<f64> for Vector {
             x: self.x / rhs,
             y: self.y / rhs,
             z: self.z / rhs
+        }
+    }
+}
+
+impl From<Color<u8>> for Vector {
+    fn from(color: Color<u8>) -> Self {
+        Vector {
+            x: color.red as f64 / 255.0,
+            y: color.green as f64 / 255.0,
+            z: color.blue as f64 / 255.0,
         }
     }
 }
