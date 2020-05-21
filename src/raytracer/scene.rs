@@ -1,9 +1,13 @@
 use super::color::Color;
-use super::object::Intersection;
 use super::vector::Vector;
+use super::camera::Camera;
+use super::object::Object;
 
 pub struct Scene {
-    background_color: Color<u8>
+    background_color: Color<u8>,
+    camera: Camera,
+    objects: Vec<Object>,
+    epsilon: f64,
 }
 
 impl Scene {
@@ -13,15 +17,26 @@ impl Scene {
                 red: 60,
                 green: 60,
                 blue: 60,
-            }
+            },
+            camera: Camera::new((400, 400)),
+            objects: Vec::new(),
+            epsilon: 1e-3
         }
+    }
+
+    pub fn set_camera(&mut self, camera: Camera) {
+        self.camera = camera;
+    }
+
+    pub fn add_object(&mut self, object: Object) {
+        self.objects.push(object);
     }
 
     pub fn render(&self, width: usize, height: usize) -> Vec<u8> {
         let mut buffer = Vec::with_capacity(width * height * 3);
         for y in 0..height {
             for x in 0..width {
-                if let Some(color) = self.get_pixel(x as f64 / width as f64, y as f64 / height as f64) {
+                if let Some(color) = self.get_pixel(x, y) {
                     buffer.push(color.red);
                     buffer.push(color.green);
                     buffer.push(color.blue);
@@ -36,17 +51,33 @@ impl Scene {
         buffer
     }
 
-    fn get_pixel(&self, x: f64, y: f64) -> Option<Color<u8>> {
-        let origin = Vector::zero();
-        let direction = Vector::zero();
-        if let Some(intersection) = self.castRay(origin, direction) {
-            Some(intersection.material.color)
-        } else {
-            None
-        }
+    fn get_pixel(&self, x: usize, y: usize) -> Option<Color<u8>> {
+        let (origin , direction) = self.camera.get_ray(x, y);
+        self.cast_ray(origin, direction)
     }
 
-    fn castRay(&self, origin: Vector, direction: Vector) -> Option<Intersection> {
+    fn cast_ray(&self, origin: Vector, direction: Vector) -> Option<Color<u8>> {
+        // println!("{:?}, {:?}", origin, direction);
+        let mut pres_dist = 1e9;
+        let mut point = origin;
+        for step in 0..1_000 {
+            if let Some(closest) = self.objects.iter().min_by(|a, b| a.distance(point).partial_cmp(&b.distance(point)).unwrap()) {
+                let distance = closest.distance(point);
+                if distance < self.epsilon {
+                    // println!("Hit");
+                    return Some(Color::debug());
+                }
+                if distance > pres_dist {
+                    // println!("Going too far away {:?} after {:?} steps", distance, step);
+                    return None;
+                }
+                point = point + direction * distance;
+                pres_dist = distance;
+            } else {
+                println!("no objects");
+                return None;
+            }
+        }
         None
     }
 }

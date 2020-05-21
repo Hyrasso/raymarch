@@ -14,4 +14,12 @@ impl Color<u8> {
             blue: 0,
         }
     }
+
+    pub fn debug() -> Self {
+        Self {
+            red: 255,
+            green: 0,
+            blue: 255,
+        }
+    }
 }

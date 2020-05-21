@@ -2,9 +2,15 @@ use super::color::Color;
 use super::vector::Vector;
 use super::material::Material;
 
-pub struct Intersection {
-    color: Color<u8>,
-    point: Vector,
-    normal: Vector,
-    pub material: Material
+pub enum Object {
+    Sphere(Vector, f64)
+}
+
+
+impl Object {
+    pub fn distance(&self, point: Vector) -> f64 {
+        match self {
+            Object::Sphere(center, radius) => (point - *center).norm() - radius
+        }
+    }
 }
