@@ -5,6 +5,7 @@ use super::material::Material;
 pub trait Object {
     fn get_material(&self, point: Vector) -> Material;
     fn distance(&self, point: Vector) -> f64;
+    fn normal(&self, point: Vector) -> Vector;
 }
 
 pub struct Sphere {
@@ -28,7 +29,11 @@ impl Object for Sphere {
         (point - self.center).norm() - self.radius
     }
 
-    fn get_material(&self, point: Vector) -> Material {
+    fn get_material(&self, _point: Vector) -> Material {
         self.material
+    }
+
+    fn normal(&self, point: Vector) -> Vector {
+        (point - self.center).normalized()
     }
 }

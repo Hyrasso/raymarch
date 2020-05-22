@@ -8,16 +8,22 @@ use raytracer::vector::Vector;
 use raytracer::object::{Sphere};
 use raytracer::camera::Camera;
 use raytracer::color;
+use raytracer::color::Color;
+use raytracer::light::DirectionalLight;
 
 fn main() {
     let mut scene: Scene = Scene::new();
     let width = 800;
     let height = 400;
     scene.set_camera(Camera::new((width, height)));
-    scene.add_object(Box::new(Sphere::new(Vector::new(0.0, 0.0, 0.0), 2.0, color::RED)));
+    scene.add_object(Box::new(Sphere::new(Vector::new(0.0, 0.0, 0.0), 2.0, Color::new(255, 10, 10))));
     // scene.add_object(Object::Sphere(Vector::new(0.0, 0.0, 3.0), 4.0));
-    scene.add_object(Box::new(Sphere::new(Vector::new(-3.0, -2.0, 0.0), 1.0, color::BLUE)));
+    scene.add_object(Box::new(Sphere::new(Vector::new(-3.0, -2.0, 0.0), 1.0, Color::new(10, 10, 255))));
     scene.add_object(Box::new(Sphere::new(Vector::new(5.0, 0.0, 0.0), 1.0, color::Color::debug())));
+    
+    // scene.add_light(Box::new(DirectionalLight::new(Vector::new(-1.0, -1.0, 0.0))));
+    scene.add_light(Box::new(DirectionalLight::new(Vector::new(1.0, 0.0, 0.5))));
+    // scene.add_light(Box::new(DirectionalLight::new(Vector::new(0.0, -1.0, -0.2))));
     let buffer = scene.render(width, height);
 
     let path = Path::new(r"render.png");
