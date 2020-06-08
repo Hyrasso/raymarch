@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul, Sub, Div};
+use std::ops::{Add, Mul, Sub, Div, Neg};
 use std::convert::From;
 use super::color::Color;
 
@@ -42,6 +42,30 @@ impl Vector {
     pub fn normalized(&self) -> Vector {
         *self / self.norm()
     }
+    // impl iter instead
+    pub fn abs(&self) -> Vector {
+        Vector {
+            x: self.x.abs(),
+            y: self.y.abs(),
+            z: self.z.abs()
+        }
+    }
+
+    pub fn max(&self, max: f64) -> Vector {
+        Vector {
+            x: self.x.max(max),
+            y: self.y.max(max),
+            z: self.z.max(max)
+        }
+    }
+
+    pub fn powf(&self, n: f64) -> Vector {
+        Vector {
+            x: self.x.powf(n),
+            y: self.y.powf(n),
+            z: self.z.powf(n)
+        }
+    }
 }
 
 impl Add for Vector {
@@ -78,6 +102,14 @@ impl Mul<f64> for Vector {
     }
 }
 
+impl Neg for Vector {
+    type Output = Self;
+    
+    fn neg(self) -> Self::Output {
+        self * -1.0
+    }
+}
+
 impl Div<f64> for Vector {
     type Output = Self;
     
@@ -99,3 +131,8 @@ impl From<Color<u8>> for Vector {
         }
     }
 }
+
+pub const UNIT: Vector = Vector{x: 1.0, y: 1.0, z: 1.0};
+pub const UNIT_X: Vector = Vector{x: 1.0, y: 0.0, z: 0.0};
+pub const UNIT_Y: Vector = Vector{x: 0.0, y: 1.0, z: 0.0};
+pub const UNIT_Z: Vector = Vector{x: 0.0, y: 0.0, z: 1.0};

@@ -61,3 +61,9 @@ pub const BLACK: Color<u8> = Color {
     green: 0,
     blue: 0,
 };
+
+pub const WHITE: Color<u8> = Color {
+    red: 255,
+    green: 255,
+    blue: 255,
+};

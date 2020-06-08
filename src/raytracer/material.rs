@@ -11,4 +11,10 @@ impl Material {
             color: Vector::new(1.0, 0.0, 1.0)
         }
     }
+
+    pub fn default_color(color: Vector) -> Self {
+        Material {
+            color
+        }
+    }
 }

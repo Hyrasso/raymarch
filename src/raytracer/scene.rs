@@ -56,16 +56,17 @@ impl Scene {
 
     fn get_pixel(&self, x: usize, y: usize) -> Option<Color<u8>> {
         let (origin , direction) = self.camera.get_ray(x, y);
-        self.cast_ray(origin, direction)
+        // gamma correction
+        self.cast_ray(origin, direction).map(|color| color.powf(2.0).into())
     }
 
-    fn cast_ray(&self, origin: Vector, direction: Vector) -> Option<Color<u8>> {
+    fn cast_ray(&self, origin: Vector, direction: Vector) -> Option<Vector> {
         // println!("{:?}, {:?}", origin, direction);
         let mut pres_dist = 1e9;
         let mut point = origin;
         let mut closest_distance = 1e9;
         for _step in 0..1_000 {
-            if let Some(closest) = self.objects.iter().min_by(|a, b| a.distance(point).partial_cmp(&b.distance(point)).unwrap()) {
+            if let Some(closest) = self.objects.iter().min_by(|a, b| a.distance(point).partial_cmp(&b.distance(point)).expect("NaN distance")) {
                 let distance = closest.distance(point);
                 if distance < self.epsilon {
                     // println!("Hit");
@@ -87,9 +88,19 @@ impl Scene {
                         // let specular = Vector::zero();
                         color = color + ambient + specular * 0.8;
                     }
-                    return Some(Color::from(color));
+                    return Some(color);
+                    // if color.norm() < 0.1 {
+                    //     return Some(color);
+                    // }
+                    // let towards_origin = (origin - point).normalized();
+                    // let reflection: Vector = normal * 2.0 * (normal.dot(&towards_origin)) - towards_origin;
+                    // if let Some(reflection) = self.cast_ray(point + reflection.normalized() * self.epsilon, reflection.normalized()) {
+                    //     return Some(color * 0.8 + reflection * 0.2);
+                    // } else {
+                    //     return Some(color);
+                    // }
                 }
-                if distance > pres_dist {
+                if distance > 2.0 * pres_dist {
                     // println!("Going too far away {:?} after {:?} steps", distance, step);
                     break;
                 }
@@ -103,7 +114,7 @@ impl Scene {
         let glow_distance = 0.5;
         if closest_distance < glow_distance {
             let glow = Vector::new(1.0, 1.0, 1.0) * (0.8 - closest_distance * 0.8 / glow_distance).powf(5.0);
-            return Some(Color::from(glow));
+            return Some(glow);
         }
         None
     }
