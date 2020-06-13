@@ -132,7 +132,7 @@ impl From<Color<u8>> for Vector {
     }
 }
 
-pub const UNIT: Vector = Vector{x: 1.0, y: 1.0, z: 1.0};
+pub const _UNIT: Vector = Vector{x: 1.0, y: 1.0, z: 1.0};
 pub const UNIT_X: Vector = Vector{x: 1.0, y: 0.0, z: 0.0};
 pub const UNIT_Y: Vector = Vector{x: 0.0, y: 1.0, z: 0.0};
 pub const UNIT_Z: Vector = Vector{x: 0.0, y: 0.0, z: 1.0};

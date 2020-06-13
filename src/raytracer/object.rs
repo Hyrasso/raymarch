@@ -20,9 +20,9 @@ pub trait Object {
 }
 
 pub struct Sphere {
-    center: Vector,
-    radius: f64,
-    material: Material
+    pub center: Vector,
+    pub radius: f64,
+    pub material: Material
 }
 
 impl Sphere {
@@ -30,7 +30,7 @@ impl Sphere {
         Sphere {
             center,
             radius,
-            material: Material { color: color.into() }
+            material: Material::default_color(color.into())
         }
     }
 }
@@ -50,9 +50,9 @@ impl Object for Sphere {
 }
 
 pub struct Box {
-    center: Vector,
-    size: Vector,
-    material: Material
+    pub center: Vector,
+    pub size: Vector,
+    pub material: Material
 }
 
 impl Box {
@@ -92,5 +92,20 @@ impl Object for BlendObjects {
     fn get_material(&self, point: Vector) -> Material {
         // todo blend materials
         self.objects[0].get_material(point)
+    }
+}
+
+pub struct InsideOutObject {
+    pub object: boxed::Box<Object>
+}
+
+impl Object for InsideOutObject {
+
+    fn distance(&self, point: Vector) -> f64 {
+        -self.object.distance(point)
+    }
+
+    fn get_material(&self, point: Vector) -> Material {
+        self.object.get_material(point)
     }
 }

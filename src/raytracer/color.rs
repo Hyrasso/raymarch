@@ -38,19 +38,19 @@ impl From<Vector> for Color<u8> {
     }
 }
 
-pub const RED: Color<u8> = Color {
+pub const _RED: Color<u8> = Color {
     red: 255,
     green: 0,
     blue: 0,
 };
 
-pub const GREEN: Color<u8> = Color {
+pub const _GREEN: Color<u8> = Color {
     red: 0,
     green: 255,
     blue: 0,
 };
 
-pub const BLUE: Color<u8> = Color {
+pub const _BLUE: Color<u8> = Color {
     red: 0,
     green: 0,
     blue: 255,
