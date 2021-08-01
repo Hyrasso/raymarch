@@ -42,7 +42,7 @@ impl Vector {
     pub fn normalized(&self) -> Vector {
         *self / self.norm()
     }
-    // impl iter instead
+    // could impl iter instead/whatever allows mapping
     pub fn abs(&self) -> Vector {
         Vector {
             x: self.x.abs(),
@@ -64,6 +64,19 @@ impl Vector {
             x: self.x.powf(n),
             y: self.y.powf(n),
             z: self.z.powf(n)
+        }
+    }
+
+    pub fn has_nan(&self) -> bool {
+        // one more reason to implement map/iter capability
+        self.x.is_nan() || self.y.is_nan() || self.z.is_nan()
+    }
+
+    pub fn mul(&self, other:Vector) -> Vector {
+        Vector {
+            x: self.x * other.x,
+            y: self.y * other.y,
+            z: self.z * other.z,
         }
     }
 }

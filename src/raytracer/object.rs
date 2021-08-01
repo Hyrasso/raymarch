@@ -10,7 +10,7 @@ pub trait Object {
     fn normal(&self, point: Vector) -> Vector {
         // distance function derivative
         let dd = Vector {
-            x: (self.distance(point + UNIT_X * DERIVATIVE_EPSILON)) - self.distance(point - UNIT_X * DERIVATIVE_EPSILON),
+            x: self.distance(point + UNIT_X * DERIVATIVE_EPSILON) - self.distance(point - UNIT_X * DERIVATIVE_EPSILON),
             y: self.distance(point + UNIT_Y * DERIVATIVE_EPSILON) - self.distance(point - UNIT_Y * DERIVATIVE_EPSILON),
             z: self.distance(point + UNIT_Z * DERIVATIVE_EPSILON) - self.distance(point - UNIT_Z * DERIVATIVE_EPSILON)
         };
@@ -72,13 +72,13 @@ impl Object for Box {
         q.max(0.0).norm() + q.x.max(q.y.max(q.z)).min(0.0)
     }
 
-    fn get_material(&self, point: Vector) -> Material {
+    fn get_material(&self, _point: Vector) -> Material {
         self.material
     }
 }
 
 pub struct BlendObjects {
-    pub objects: Vec<boxed::Box<Object>>,
+    pub objects: Vec<boxed::Box<dyn Object>>,
     pub smooth_coef: f64
 }
 
@@ -96,7 +96,7 @@ impl Object for BlendObjects {
 }
 
 pub struct InsideOutObject {
-    pub object: boxed::Box<Object>
+    pub object: boxed::Box<dyn Object>
 }
 
 impl Object for InsideOutObject {

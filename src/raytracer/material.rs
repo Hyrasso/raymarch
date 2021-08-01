@@ -16,7 +16,7 @@ impl Material {
     pub fn default_color(color: Vector) -> Self {
         Material {
             color,
-            reflection_coeff: 0.0,
+            reflection_coeff: 0.2,
             specular_coeff: 0.8,
             specular_power: 20.0
         }
