@@ -7,15 +7,18 @@ use raytracer::scene::Scene;
 use raytracer::camera::Camera;
 
 fn main() {
-    let width = 1200;
-    let height = 800;
+    let ratio = 2;
+    let height = 600;
+    let width = height * ratio;
     let mut scene: Scene = Scene::new();
     scene.set_camera(Camera::new((width, height)));
     scene.debug();
     
+    println!("Start rendering");
+
     let buffer = scene.render(width, height);
 
-    print!("Render complete");
+    println!("Render complete");
 
     let path = Path::new(r"render.png");
     let file = File::create(path).unwrap();
